@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="auto">
 <head>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
   <title>My Firebase App</title>
 </head>
 <body>
@@ -37,7 +35,7 @@
 
       // Request permission for notifications and get the device token
       // This is a basic example; you'll want to add more robust error handling
-      getToken(messaging, { vapidKey: 'YOUR_VAPID_KEY_FROM_FIREBASE_CONSOLE' }).then((currentToken) => {
+      getToken(messaging, { vapidKey: mshIVKVfWWw_CsLUST7vqyiS_jimG3cVhKzPJDJrSvE }).then((currentToken) => {
         if (currentToken) {
           console.log('FCM registration token:', currentToken);
           // Send the token to your server to save it for sending push notifications
