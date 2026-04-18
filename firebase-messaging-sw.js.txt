@@ -1,0 +1,63 @@
+// firebase-messaging-sw.js
+
+// [START import_firebase_and_messaging_sw]
+// Give the service worker access to Firebase Messaging.
+// Replace '10.x.x' with the compatible version of the Firebase JS SDK you're using
+// in your main app. For example, if you use "10.10.0" in your main app, use that here.
+// You can find the latest versions at https://firebase.google.com/docs/web/setup#available-libraries
+importScripts('https://www.gstatic.com/firebasejs/10.x.x/firebase-app-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/10.x.x/firebase-messaging-compat.js');
+// [END import_firebase_and_messaging_sw]
+
+// [START initialize_firebase_in_sw]
+// Initialize the Firebase app in the service worker by passing in
+// your app's Firebase config object.
+// These are the configuration values specific to your project: therapyapp-8ba8d
+firebase.initializeApp({
+  apiKey: "AIzaSyCGvnSyC2J8T-_DTPovr4_Q-HYyX7dSOWw",
+  authDomain: "therapyapp-8ba8d.firebaseapp.com",
+  projectId: "therapyapp-8ba8d",
+  storageBucket: "therapyapp-8ba8d.firebasestorage.app",
+  messagingSenderId: "933736933136",
+  appId: "1:933736933136:web:c66f850914c6f41fb12795"
+  // measurementId is not typically needed in the service worker context
+});
+// [END initialize_firebase_in_sw]
+
+// Retrieve an instance of Firebase Messaging so that it can handle background messages.
+// [START init_messaging_sw]
+const messaging = firebase.messaging();
+// [END init_messaging_sw]
+
+// Optional: Handle background messages
+// This function will be called when a message is received while your web app
+// is in the background (i.e., not actively in the user's browser tab).
+// [START background_message_handler]
+messaging.onBackgroundMessage((payload) => {
+  console.log('[firebase-messaging-sw.js] Received background message ', payload);
+
+  // Customize notification here
+  const notificationTitle = payload.notification.title || 'New Message';
+  const notificationOptions = {
+    body: payload.notification.body || 'You have a new notification.',
+    icon: payload.notification.icon || '/firebase-logo.png', // Ensure you have an icon at this path
+    data: payload.data // Pass along any custom data
+  };
+
+  self.registration.showNotification(notificationTitle, notificationOptions);
+});
+// [END background_message_handler]
+
+// Optional: Handle notification clicks (e.g., open a URL)
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close(); // Close the notification
+
+  // Customize this behavior. For example, open a specific URL when clicked.
+  if (event.action === 'some-action') {
+    clients.openWindow('https://example.com/some-page');
+  } else if (event.notification.data && event.notification.data.url) {
+    clients.openWindow(event.notification.data.url);
+  } else {
+    clients.openWindow('https://your-app-domain.com/'); // Default URL
+  }
+});
